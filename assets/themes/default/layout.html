@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="./assets/styles.css">
+    {{head}}
+</head>
+<body>
+<div class="pages">
+    <div class="table-of-contents">
+        {{tableOfContents}}
+    </div>
+    <div class="content">
+        <div class="content-inner">
+            {{content}}
+        </div>
+    </div>
+</div>
+{{endBody}}
+<script>
+
+    initTableOfContents();
+
+    function initTableOfContents() {
+        var nodes = document.querySelector('.content-inner').querySelectorAll('h2,h3');
+        var tableOfContentsNode = document.getElementById('table-of-contents');
+
+        generateTableOfContents(nodes, tableOfContentsNode);
+    }
+
+    function generateTableOfContents(nodes, tableOfContentsNode) {
+        var list = [];
+
+        nodes.forEach(function (node) {
+            let headerText = node.innerText.trim();
+
+            if (headerText) {
+                let linkNode = document.createElement('a');
+                var headerId = generateHash(headerText);
+
+                linkNode.href = '#' + headerId;
+                linkNode.innerText = '#';
+
+                node.innerHTML = headerText + '&nbsp;';
+
+                list.push({text: headerText, url: '#' + headerId, tagName: node.tagName});
+
+                node.setAttribute('id', headerId);
+                node.appendChild(linkNode);
+            }
+        });
+
+        console.log(list);
+
+
+        if (list.length > 0) {
+            var ul = document.createElement('ul');
+            list.forEach(function (item) {
+
+                var li = document.createElement('li');
+                var a = document.createElement('a');
+
+                a.href = item.url;
+                a.innerText = item.text;
+
+                li.appendChild(a)
+
+                ul.appendChild(li);
+            });
+
+            tableOfContentsNode.append(ul);
+        } else {
+            tableOfContentsNode.style.display = 'none';
+        }
+    }
+
+    function generateHash(text) {
+        var normalizeText = text;
+        normalizeText = normalizeText
+            .trim()
+            .replace(/\s{2,}/gi, ' ')
+            .replace(/[.,\/#!$?%\^&\*;:{}=\-_`'"~()]/g, '')
+            .replace(/\s/gi, '-');
+
+        normalizeText = normalizeText.toLowerCase();
+
+        return normalizeText;
+    }
+</script>
+</body>
+</html>
