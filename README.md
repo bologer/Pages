@@ -7,9 +7,9 @@ You may use CLI utility or require library files in your project.
 Run it in console: 
 ```
 php vendor/bin/parser.php \
-    --docs-dir=/path/to/docs
-    --dist-dir=/path/to/dist 
-    --code-highlight-languages=php,javascript
+    --docs-dir=/path/to/docs \
+    --dist-dir=/path/to/dist \
+    --code-highlight-languages=php,javascript \
     --plugins=code
 ```
 
