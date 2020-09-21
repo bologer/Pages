@@ -4,7 +4,7 @@ Pages is a lightweight PHP utility to build documentation.
 
 You may use CLI utility or require library files in your project.
 
-You may run it as console job: 
+Run it in console: 
 ```
 php vendor/bin/parser.php \
     --docs-dir=/path/to/docs
