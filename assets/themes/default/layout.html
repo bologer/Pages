@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>{{title}}</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="./assets/styles.css">
     {{head}}
+    <link type="text/css" rel="stylesheet" href="./assets/styles.css">
 </head>
 <body>
 <div class="pages">
@@ -18,7 +18,7 @@
         </div>
     </div>
 </div>
-{{endBody}}
+{{bodyEnd}}
 <script>
 
     initTableOfContents();
@@ -51,9 +51,6 @@
                 node.appendChild(linkNode);
             }
         });
-
-        console.log(list);
-
 
         if (list.length > 0) {
             var ul = document.createElement('ul');

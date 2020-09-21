@@ -48,6 +48,10 @@ body {
     -webkit-box-align: center;
 }
 
+.table-of-contents ul > li[data-depth="2"] a {
+    padding-left: 32px;
+}
+
 .table-of-contents ul > li a:hover,
 .table-of-contents ul > li a:active {
     background-color: #E6ECF1;
@@ -84,4 +88,40 @@ code {
     margin: 0px 1px;
     padding: 3px 6px;
     border-radius: 3px;
+}
+
+/* Code */
+pre {
+    font-family: Operator Mono A,Operator Mono B,Source Code Pro,Menlo,Consolas,Monaco,monospace;
+    clear: both;
+    background: #f5f5f5;
+    padding: 0;
+    -moz-tab-size: 2;
+    -o-tab-size: 2;
+    tab-size: 2;
+    -ms-word-break: normal;
+    word-break: normal;
+    -webkit-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+    position: relative;
+    line-height: 28px;
+    border-radius: 8px;
+    min-width: 100px;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+pre > code.hljs {
+    scrollbar-color: #666 #201c29;
+    background: 0 0;
+    padding: 15px 20px 12px 22px;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+    overflow-x: scroll;
+    max-width: 100%;
+    min-width: 100px;
+    font-size: 14px;
+    line-height: 1.75;
 }

@@ -17,19 +17,25 @@ class MenuItem
     public string $title;
 
     /**
-     * @var string URL path.
+     * @var string File name.
      */
-    public string $url;
+    public string $fileName;
+
+    /**
+     * @var int Depth of the menu.
+     */
+    public int $depth = 1;
 
     /**
      * @var File
      */
     public File $file;
 
-    public function __construct(string $title, string $url, File $file)
+    public function __construct(string $title, string $fileName, File $file, int $depth = 1)
     {
         $this->title = $title;
-        $this->url = $url;
+        $this->fileName = $fileName;
         $this->file = $file;
+        $this->depth = $depth;
     }
 }

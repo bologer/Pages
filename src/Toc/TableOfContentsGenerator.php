@@ -8,6 +8,8 @@ class TableOfContentsGenerator
 {
     private TableOfContents $tableOfContents;
 
+    private $content;
+
     public function __construct(TableOfContents $tableOfContents)
     {
         $this->tableOfContents = $tableOfContents;
@@ -15,13 +17,25 @@ class TableOfContentsGenerator
 
     public function generate()
     {
-        $items = $this->tableOfContents->getPreparedItem();
-
-        $result = '<ul>';
-        foreach ($items as $item) {
-            $result .= '<li><a href="' . $item->url . '">' . $item->title . '</a></li>';
+        if (!empty($this->content)) {
+            return $this->content;
         }
-        $result .= '</ul>';
-        return $result;
+        $items = $this->tableOfContents->getMenuItems();
+        $this->content = '<ul>';
+        foreach ($items as $item) {
+            $this->content .= '<li data-depth="' . $item->depth . '">';
+            $this->content .= '<a href="' . $item->fileName . '.html">' . $item->title . '</a>';
+            $this->content .= '</li>';
+        }
+        $this->content .= '</ul>';
+        return $this->content;
+    }
+
+    /**
+     * Resets object to default state.
+     */
+    public function reset()
+    {
+        $this->content = null;
     }
 }

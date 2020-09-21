@@ -3,8 +3,6 @@
 
 namespace Bologer;
 
-use Parsedown;
-
 class Pages
 {
     private Config $config;

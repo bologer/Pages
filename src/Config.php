@@ -11,9 +11,9 @@ namespace Bologer;
 class Config
 {
     /**
-     * @var string Absolute directory to source files to be processed.
+     * @var string Absolute directory to documentation folder to be processed.
      */
-    public string $srcFolder;
+    public string $docsFolder;
 
     /**
      * @var string Absolute directory where to put generated files.
@@ -36,9 +36,14 @@ class Config
      * about available languages.
      * @link https://highlightjs.org/usage/
      */
-    public $codeHighlightLanguages = [];
+    public array $codeHighlightLanguages = [];
 
-    public function getSrcExtension()
+    /**
+     * @var array Plugins to be loaded with documentation. Available options: code.
+     */
+    public array $plugins = ['code'];
+
+    public function getDocsExtension()
     {
         return trim($this->srcExtension, '.');
     }

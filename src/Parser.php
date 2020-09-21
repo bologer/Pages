@@ -3,24 +3,25 @@
 
 namespace Bologer;
 
-
 use Bologer\Dto\File;
 use Bologer\Toc\MenuItem;
+use Bologer\Layout\Layout;
 use Bologer\Toc\TableOfContents;
+use Bologer\Parser\MarkdownParser;
+use Bologer\Parser\ParserInterface;
 use Bologer\Toc\TableOfContentsGenerator;
-use Parsedown;
 
-define('BOOKS_ASSETS_DIR', basename(__DIR__ . '/../assets'));
+define('BOOKS_ASSETS_DIR', __DIR__ . '/../assets');
 
 class Parser
 {
     private Config $config;
-    private Parsedown $parser;
+    private ParserInterface $parser;
 
     public function __construct(Config $config)
     {
         $this->config = $config;
-        $this->parser = new Parsedown();
+        $this->parser = new MarkdownParser();
     }
 
     public function parse()
@@ -30,73 +31,35 @@ class Parser
         $toc = new TableOfContents($this->config);
         $toc->prepare($files);
 
-        $tableOfContents = (new TableOfContentsGenerator($toc))->generate();
+        if (!is_dir($this->config->distFolder)) {
+            mkdir($this->config->distFolder, 0755, true);
+        }
 
-        foreach ($toc->getPreparedItem() as $menuItem) {
-            $this->parseFile($menuItem, $tableOfContents);
+        $tableOfContents = new TableOfContentsGenerator($toc);
+        $layout = new Layout($this->config);
+        $layout->withLayout(BOOKS_ASSETS_DIR . '/themes/default/layout.html');
+        $layout->withTableOfContents($tableOfContents);
+
+        foreach ($toc->getMenuItems() as $menuItem) {
+            $this->parseFile($menuItem, $layout);
         }
 
         $assetsFolder = $this->config->distFolder . '/assets';
 
         if (!is_dir($assetsFolder)) {
-            mkdir($assetsFolder);
+            mkdir($assetsFolder, 0755, true);
         }
+
         copy(BOOKS_ASSETS_DIR . '/themes/default/styles.css', $assetsFolder . '/styles.css');
     }
 
-    public function parseFile(MenuItem $menuItem, string $tableOfContents)
+    public function parseFile(MenuItem $menuItem, Layout $layout)
     {
         $content = file_get_contents($menuItem->file->path);
-        $fileNameWithoutExtension = $menuItem->file->getFileName($this->config->getSrcExtension());
-        $dist = rtrim($this->config->distFolder, '/') . '/' . $fileNameWithoutExtension . '.html';
-
-
-        $head = '';
-        $endOfBody = null;
-
-        if (!empty($this->config->codeHighlightLanguages)) {
-
-            $head = <<<HTML
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/darcula.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js"></script>
-HTML;
-
-            foreach ($this->config->codeHighlightLanguages as $language) {
-                $head .= <<<HTML
-<script charset="UTF-8" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/languages/$language.min.js"></script>
-HTML;
-            }
-
-            $endOfBody = <<<HTML
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('pre code').forEach((block) => {
-            hljs.highlightBlock(block);
-        });
-    });
-</script>
-HTML;
-        }
-
-        $parsedContent = $this->getLayout(
-            $menuItem->title,
-            $tableOfContents,
-            $head,
-            $this->parser->text($content),
-            $endOfBody
-        );
-        file_put_contents($dist, $parsedContent);
-    }
-
-    public function getLayout(string $title, string $tableOfContents, string $head, string $content, string $endBody = null)
-    {
-        $layoutContent = file_get_contents(BOOKS_ASSETS_DIR . '/themes/default/layout.html');
-
-        return str_replace(
-            ['{{title}}', '{{tableOfContents}}', '{{head}}', '{{content}}', '{{endBody}}'],
-            [$title, $tableOfContents, $head, $content, $endBody],
-            $layoutContent
-        );
+        $dist = rtrim($this->config->distFolder, '/') . '/' . $menuItem->fileName . '.html';
+        $layout->withTitle($menuItem->title);
+        $layout->withContent($this->parser->parse($content));
+        file_put_contents($dist, $layout->generate());
     }
 
     /**
@@ -106,12 +69,21 @@ HTML;
      */
     public function getFilesToParse(): array
     {
-        $foundFiles = glob(rtrim($this->config->srcFolder, '/') . '/' . '*.' . $this->config->getSrcExtension());
+        $foundFiles = glob(rtrim($this->config->docsFolder, '/') . '/' . '*.' . $this->config->getDocsExtension());
         sort($foundFiles);
 
         foreach ($foundFiles as $key => $path) {
             $foundFiles[$key] = new File($path);
         }
         return $foundFiles;
+    }
+
+    /**
+     * Set custom parser.
+     * @param ParserInterface $parser
+     */
+    public function withParser(ParserInterface $parser)
+    {
+        $this->parser = $parser;
     }
 }
