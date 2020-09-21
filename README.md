@@ -22,7 +22,7 @@ $config = new Config();
 $config->docsFolder = __DIR__ . '/docs';
 $config->distFolder = __DIR__ . '/dist';
 $config->codeHighlightLanguages = ['html', 'php', 'javascript'];
-$config->plugin = ['code'];
+$config->plugins = ['code'];
 $pages = new Pages($config);
 $pages->build();
 ```
