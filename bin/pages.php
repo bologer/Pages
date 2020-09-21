@@ -1,13 +1,14 @@
 #!/usr/bin/env php
 <?php
 
-foreach (array(__DIR__ . '/../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php', __DIR__ . '/../autoload.php') as $file) {
+$fileToRequire = null;
+foreach (array(__DIR__ . '/../../../autoload.php', __DIR__ . '/../vendor/autoload.php', __DIR__ . '/vendor/autoload.php') as $file) {
     if (file_exists($file)) {
-        require $file;
+        $fileToRequire = $file;
     }
 }
 
-if (!isset($file)) {
+if ($fileToRequire === null) {
     fwrite(
         STDERR,
         'You need to set up the project dependencies using Composer:' . PHP_EOL . PHP_EOL .
@@ -16,6 +17,8 @@ if (!isset($file)) {
     );
     die(1);
 }
+
+require $fileToRequire;
 
 use Garden\Cli\Cli;
 use Bologer\Pages;
