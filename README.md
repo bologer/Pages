@@ -1,5 +1,8 @@
 # Pages 
 
+[![Build Status](https://travis-ci.org/bologer/Pages.svg?branch=master)](https://travis-ci.org/bologer/Pages)
+[![Total Downloads](https://img.shields.io/packagist/dt/bologer/pages.svg?style=flat-square)](https://packagist.org/packages/bologer/pages)
+
 Pages is a lightweight PHP utility to build documentation. 
 
 You may use CLI utility or require library files in your project.

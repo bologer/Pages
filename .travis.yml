@@ -3,4 +3,5 @@ php:
   - '7.3'
   - '7.4'
 script:
-  - composer install && composer run test
+  - composer install
+  - composer run test
