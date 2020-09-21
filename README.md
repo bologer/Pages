@@ -34,7 +34,7 @@ The recommended way to install Pages is through Composer.
 composer require bologer/pages
 ```
 
-### Get Started
+## Documentation
 
 You can find documentation here - https://bologer.github.io/pages/docs/get-started.html. 
 
