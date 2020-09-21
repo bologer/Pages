@@ -13,7 +13,7 @@ $cli->description('Pages - easy way to generate documentation.')
     ->opt('docs-dir', 'Absolute directory to documentation folder to be processed.', true, 'string')
     ->opt('dist-dir', 'Absolute directory where to put generated files.', true, 'string')
     ->opt('code-highlight-languages', 'CSV list of languages available for highlight, e.g. html,php,javascript. See https://highlightjs.org/usage/ for details.', false, 'string')
-    ->opt('plugins', 'Plugins to be loaded with documentation. Available options: code.', false, 'string');
+    ->opt('plugins', 'CSV list of plugins to be loaded. Available options: code.', false, 'string');
 
 // Parse and return cli args.
 $args = $cli->parse($argv, true);
