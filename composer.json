@@ -21,13 +21,20 @@
   "require": {
     "php": "^7.4",
     "erusev/parsedown": "^1.7",
+    "phpspec/prophecy": "^1.11",
     "vanilla/garden-cli": "^2.2"
   },
   "config": {
     "preferred-install": "dist",
     "sort-packages": true
   },
+  "scripts": {
+    "test": "./vendor/bin/phpunit tests"
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
-  "bin": ["bin/pages.php"]
+  "bin": ["bin/pages.php"],
+  "require-dev": {
+    "phpunit/phpunit": "^9"
+  }
 }

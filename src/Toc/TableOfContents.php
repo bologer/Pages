@@ -13,6 +13,8 @@ use Bologer\Dto\File;
  */
 class TableOfContents
 {
+    const DEPTH_REGEX = '/^(\d\.)+/';
+
     private Config $config;
 
     /**
@@ -32,22 +34,13 @@ class TableOfContents
      */
     public function prepare(array $files): void
     {
-        foreach ($files as $index => $file) {
-            $fileContent = file_get_contents($file->path);
-            $fileName = basename($file->path, '.' . $this->config->getDocsExtension());
-
-            // Clean-up from numbering: 1. or 1.1.1
-            $fileName = preg_replace('/^(\d\.)+/', '', $fileName);
-
-            if (preg_match('/^.*?#\s+(.*?)\n/m', $fileContent, $matches)) {
-                $title = trim($matches[1]);
-            } else {
+        foreach ($files as $file) {
+            $fileName = $file->getFileNameWithoutExtension($this->config->getDocsExtension());
+            $depth = $this->calculateNumberingSystemDepth($fileName);
+            $fileName = $this->removeNumberingSystem($fileName);
+            $title = $this->getTitle($file);
+            if ($title === null) {
                 $title = $fileName;
-            }
-
-            $depth = 1;
-            if (preg_match('/^(\d\.)+/', $fileName, $matches)) {
-                $depth = substr_count($matches[0], '.');
             }
 
             $this->menuItems[] = new MenuItem(
@@ -67,5 +60,43 @@ class TableOfContents
     public function getMenuItems(): array
     {
         return $this->menuItems;
+    }
+
+    /**
+     * Generates title
+     * @param File $file
+     * @return string|null  NULL when no title was found in the file content.
+     */
+    protected function getTitle(File $file)
+    {
+        if (preg_match('/^.*?#\s+(.*?)(\n|$)/m', $file->getFileContent(), $matches)) {
+            return trim($matches[1]);
+        }
+
+        return null;
+    }
+
+    /**
+     * Cleans up file name from numbering system, so "1.1.file" would be come "file".
+     * @param string $fileName
+     * @return string|string[]|null
+     */
+    protected function removeNumberingSystem(string $fileName)
+    {
+        return preg_replace(self::DEPTH_REGEX, '', $fileName);
+    }
+
+    /**
+     * @param string $fileName
+     * @return int
+     */
+    protected function calculateNumberingSystemDepth(string $fileName): int
+    {
+        $depth = 1;
+        if (preg_match(self::DEPTH_REGEX, $fileName, $matches)) {
+            $depth = substr_count($matches[0], '.');
+        }
+
+        return $depth;
     }
 }

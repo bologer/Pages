@@ -28,4 +28,22 @@ class File
     {
         return basename($this->path, '.' . $extension);
     }
+
+    /**
+     * Get file content.
+     * @return false|string
+     */
+    public function getFileContent()
+    {
+        return file_get_contents($this->path);
+    }
+
+    /**
+     * @param string $extension
+     * @return string
+     */
+    public function getFileNameWithoutExtension(string $extension)
+    {
+        return basename($this->path, '.' . trim($extension, '.'));
+    }
 }

@@ -23,7 +23,7 @@ class Config
     /**
      * @var string Source file extension. Script will search for such file extension, build table of contents, etc.
      */
-    public string $srcExtension = 'md';
+    public string $docsExtension = 'md';
 
     /**
      * @var string Distributed file extension. This file extension will be used on source files after they are
@@ -45,6 +45,6 @@ class Config
 
     public function getDocsExtension()
     {
-        return trim($this->srcExtension, '.');
+        return trim($this->docsExtension, '.');
     }
 }

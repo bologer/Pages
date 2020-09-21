@@ -39,3 +39,8 @@ composer require bologer/pages
 You can find documentation here - https://bologer.github.io/pages/docs/get-started.html. 
 
 By the way, the documentation on that link is built by Pages.
+
+
+## Examples 
+
+- Pages [documentation repository](https://github.com/bologer/bologer.github.com/tree/master/pages)
